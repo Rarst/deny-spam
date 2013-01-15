@@ -1,0 +1,126 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: R Deny Spam v0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2010-06-05 14:56+0000\n"
+"Last-Translator: Rarst <contact@rarst.net>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: r-deny-spam.php:240
+#@ r-deny-spam
+msgid "R Deny Spam Settings"
+msgstr "Настройки R Deny Spam"
+
+#: r-deny-spam.php:241
+#@ r-deny-spam
+msgid "R Deny Spam"
+msgstr ""
+
+#: scb-check.php:28
+msgid "Install now"
+msgstr ""
+
+#: r-deny-spam.php:110
+#@ r-deny-spam
+msgid "Comment has <strong>over "
+msgstr "Комментарий содержит <strong>более"
+
+#: r-deny-spam.php:112
+#@ r-deny-spam
+msgid " links</strong>. Please go <a href=\"javascript: history.go(-1)\">back</a> and reduce number of those."
+msgstr "ссылок</strong>. Пожалуйста вернитесь <a href=\"javascript: history.go(-1)\">назад</a> и уменьшите их количество."
+
+#: r-deny-spam.php:123
+#: r-deny-spam.php:159
+#@ r-deny-spam
+msgid "Duplicate comment content. Please go <a href=\"javascript: history.go(-1)\">back</a> and rephrase."
+msgstr "Дублирующееся содержание комментария. Пожалуйста <a href=\"javascript: history.go(-1)\">вернитесь</a> и перефразируйте."
+
+#: r-deny-spam.php:135
+#@ r-deny-spam
+msgid "Your URL or domain is in list of known spam-promoted sites. If you believe this to be an error please contact site admin."
+msgstr "Ваш URL или домен в списке сайтов продвигаемых спамом. Если вы считаете это ошибкой то свяжитесь с администратором сайта."
+
+#: r-deny-spam.php:147
+#@ r-deny-spam
+msgid "Your IP is in list of known spam sources. If you believe this to be an error please contact site admin."
+msgstr "Ваш IP в списке известных источников спама. Если вы считаете это ошибкой то свяжитесь с администратором сайта."
+
+#: r-deny-spam.php:249
+#@ r-deny-spam
+msgid "Links limit"
+msgstr "Лимит ссылок"
+
+#: r-deny-spam.php:251
+#@ r-deny-spam
+msgid "Match if more than"
+msgstr "Если более"
+
+#: r-deny-spam.php:252
+#@ r-deny-spam
+msgid "links in comment text"
+msgstr "ссылок в теле комментария."
+
+#: r-deny-spam.php:262
+#@ r-deny-spam
+msgid "Known spam comment content"
+msgstr "Известное содержимое спам комментария"
+
+#: r-deny-spam.php:264
+#@ r-deny-spam
+msgid "Known spam-related sites"
+msgstr "Известные сайты, связанные со спамом"
+
+#: r-deny-spam.php:266
+#@ r-deny-spam
+msgid "Known spam-related IPs"
+msgstr "Известные IP, связанные со спамом"
+
+#: r-deny-spam.php:268
+#@ r-deny-spam
+msgid "Match if encountered over"
+msgstr "Если встречается более"
+
+#: r-deny-spam.php:269
+#@ r-deny-spam
+msgid "times in database"
+msgstr "раз в базе данных"
+
+#: r-deny-spam.php:279
+#@ r-deny-spam
+msgid "Groups of spam comments"
+msgstr "Группы спам комментариев"
+
+#: r-deny-spam.php:316
+#@ r-deny-spam
+msgid "Reject comment"
+msgstr "Отбросить комментарий"
+
+#: r-deny-spam.php:316
+#@ r-deny-spam
+msgid "Send comment to spam"
+msgstr "Отправить комментарий в спам"
+
+#: r-deny-spam.php:312
+#@ r-deny-spam
+msgid "On match"
+msgstr "При совпадении"
+
+#: r-deny-spam.php:327
+#@ r-deny-spam
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
