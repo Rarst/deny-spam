@@ -30,6 +30,7 @@ require_once dirname( __FILE__ ) . '/scb-check.php';
 if ( ! scb_check( __FILE__ ) )
 	return;
 
+require dirname( __FILE__ ) . '/php/class-deny-spam.php';
 require dirname( __FILE__ ) . '/php/class-deny-spam-admin-page.php';
 
 /* Plugin initialization */
