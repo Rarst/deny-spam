@@ -33,51 +33,7 @@ if ( ! scb_check( __FILE__ ) )
 require dirname( __FILE__ ) . '/php/class-deny-spam.php';
 require dirname( __FILE__ ) . '/php/class-deny-spam-admin-page.php';
 
-/* Plugin initialization */
-rds_init();
-
-/**
- * Plugin initialization.
- *
- * @global scbOptions $rds_options stores plugin settings in database
- *
- * @uses add_action() to add rds_check() into comment processing
- * @uses wp_schedule_event() to register async tasks
- * @uses scbOptions
- * @uses scbAdminPage
- *
- */
-function rds_init() {
-
-	load_plugin_textdomain( 'r-deny-spam', '', basename( dirname( __FILE__ ) ) . '/lang' );
-
-	/* Plugin options to be stored in database */
-	global $rds_options;
-
-	$rds_options = new scbOptions( 'r-deny-spam', __FILE__, array(
-		'links_limit'        => 5,
-		'links_limit_action' => 'reject',
-		'duplicate_action'   => 'reject',
-		'known_sites'        => array(),
-		'known_sites_action' => 'spam',
-		'known_ip_limit'     => 3,
-		'known_ip_action'    => 'spam',
-		'group_action'       => 'reject',
-	) );
-
-	/* Comment analyze routine */
-	add_action( 'wp_blacklist_check', 'rds_check', 10, 6 );
-
-	/* Async tasks scheduling */
-	if ( ! wp_next_scheduled( 'rds_cron' ) ) {
-		wp_schedule_event( time(), 'hourly', 'rds_cron' );
-	}
-	add_action( 'rds_cron', 'rds_cron_functions' );
-
-	/* Settings page */
-	if ( is_admin() )
-		scbAdminPage::register( 'Deny_Spam_Admin_Page', __FILE__, $rds_options );
-}
+Deny_Spam::on_load();
 
 /**
  * Analyzes the comment.
