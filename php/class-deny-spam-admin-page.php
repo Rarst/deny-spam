@@ -9,12 +9,12 @@ class Deny_Spam_Admin_Page extends scbAdminPage {
 
 	function setup() {
 
-		$this->textdomain = 'r-deny-spam';
+		$this->textdomain = 'deny-spam';
 
 		$this->args = array(
-			'page_title' => __( 'R Deny Spam Settings', $this->textdomain ),
-			'menu_title' => __( 'R Deny Spam', $this->textdomain ),
-			'page_slug'  => 'r-deny-spam',
+			'page_title' => __( 'Deny Spam Settings', $this->textdomain ),
+			'menu_title' => __( 'Deny Spam', $this->textdomain ),
+			'page_slug'  => 'deny-spam',
 		);
 	}
 
