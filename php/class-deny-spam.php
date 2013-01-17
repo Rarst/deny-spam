@@ -75,7 +75,7 @@ class Deny_Spam {
 			}
 			else {
 
-				add_filter( 'pre_comment_approved', 'rds_set_approved_spam' );
+				add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 			}
 
 			return;
@@ -89,7 +89,7 @@ class Deny_Spam {
 			if ( 'reject' == self::$options->duplicate_action )
 				wp_die( __( 'Duplicate comment content. Please go <a href="javascript: history.go(-1)">back</a> and rephrase.', 'r-deny-spam' ) );
 			else
-				add_filter( 'pre_comment_approved', 'rds_set_approved_spam' );
+				add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 
 			return;
 		}
@@ -104,7 +104,7 @@ class Deny_Spam {
 				if ( 'reject' == self::$options->known_sites_action )
 					wp_die( __( 'Your URL or domain is in list of known spam-promoted sites. If you believe this to be an error please contact site admin.', 'r-deny-spam' ) );
 				else
-					add_filter( 'pre_comment_approved', 'rds_set_approved_spam' );
+					add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 
 				return;
 			}
@@ -118,7 +118,7 @@ class Deny_Spam {
 			if ( 'reject' == self::$options->known_ip_action )
 				wp_die( __( 'Your IP is in list of known spam sources. If you believe this to be an error please contact site admin.', 'r-deny-spam' ) );
 			else
-				add_filter( 'pre_comment_approved', 'rds_set_approved_spam' );
+				add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 
 			return;
 		}
@@ -136,10 +136,20 @@ class Deny_Spam {
 			else {
 
 				$wpdb->query( "UPDATE $wpdb->comments SET comment_approved='spam' WHERE comment_content = '$comment'" );
-				add_filter( 'pre_comment_approved', 'rds_set_approved_spam' );
+				add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 			}
 
 			return;
 		}
+	}
+
+	/**
+	 * Overrides approved status with 'spam'
+	 *
+	 * @return string spam
+	 */
+	static function pre_comment_approved_spam() {
+
+		return 'spam';
 	}
 }

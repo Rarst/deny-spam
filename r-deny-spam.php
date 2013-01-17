@@ -54,16 +54,6 @@ function rds_cron_functions() {
 	$rds_options->known_sites = rds_known_sites( 10 );
 }
 
-
-/**
- * Overrides approved status with 'spam'
- *
- * @return string spam
- */
-function rds_set_approved_spam() {
-	return 'spam';
-}
-
 /**
  * Queries database for URLs in spam, calculates top encountered domains.
  *
