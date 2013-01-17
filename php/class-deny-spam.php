@@ -30,12 +30,13 @@ class Deny_Spam {
 
 		add_action( 'wp_blacklist_check', array( __CLASS__, 'wp_blacklist_check' ), 10, 6 );
 
-		if ( ! wp_next_scheduled( 'rds_cron' ) ) {
-
-			wp_schedule_event( time(), 'hourly', 'rds_cron' );
-		}
-
-		add_action( 'rds_cron', 'rds_cron_functions' );
+		// TODO move on to scbFramework and on activation/deactivation
+//		if ( ! wp_next_scheduled( 'rds_cron' ) ) {
+//
+//			wp_schedule_event( time(), 'hourly', 'rds_cron' );
+//		}
+//
+//		add_action( 'rds_cron', 'rds_cron_functions' );
 	}
 
 	static function admin_init() {
@@ -99,7 +100,7 @@ class Deny_Spam {
 
 			$dupe = "SELECT comment_ID FROM $wpdb->comments WHERE comment_approved='spam' AND comment_author_url = '$url' LIMIT 1";
 
-			if ( $wpdb->get_var( $dupe ) || rds_is_known_spam_domain( $url ) ) {
+			if ( $wpdb->get_var( $dupe ) || self::is_known_spam_domain( $url ) ) {
 
 				if ( 'reject' == self::$options->known_sites_action )
 					wp_die( __( 'Your URL or domain is in list of known spam-promoted sites. If you believe this to be an error please contact site admin.', 'r-deny-spam' ) );
@@ -151,5 +152,150 @@ class Deny_Spam {
 	static function pre_comment_approved_spam() {
 
 		return 'spam';
+	}
+
+	/**
+	 * Async tasks to be scheduled with WP Cron API
+	 */
+	static function rds_cron_functions() {
+
+		self::delete_old_spam();
+		self::spam_pending_by_url_pattern();
+		self::spam_pending_by_known_ip();
+		self::spam_pending_by_ip_pattern();
+		self::$options->known_sites = self::get_top_spam_hosts( 10 );
+	}
+
+	/**
+	 * Deletes spam older than one month.
+	 *
+	 * TODO customize interval to retain
+	 *
+	 * @return int deleted count
+	 */
+	static function delete_old_spam() {
+
+		/** @var wpdb $wpdb */
+		global $wpdb;
+
+		$query = "DELETE FROM $wpdb->comments WHERE comment_approved='spam' AND comment_date < DATE_SUB( NOW(), INTERVAL 1 MONTH )";
+
+		return $wpdb->query( $query );
+	}
+
+	/**
+	 * Checks URL against top spam domains.
+	 *
+	 * @param string $url
+	 *
+	 * @return boolean true on known domain match
+	 */
+	static function is_known_spam_domain( $url ) {
+
+		$host = parse_url( $url, PHP_URL_HOST );
+
+		if ( false === $host )
+			return false;
+
+		$host = strtolower( $host );
+
+		// TODO shame! fix!
+		if ( in_array( $host, self::$options->known_sites ) )
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Sends to spam unapproved comments that match known spam IPs.
+	 */
+	static function spam_pending_by_known_ip() {
+
+		/** @var wpdb $wpdb */
+		global $wpdb;
+
+		$query   = "SELECT DISTINCT comment_author_IP FROM $wpdb->comments WHERE comment_approved='0' AND comment_author_IP IN (SELECT DISTINCT comment_author_IP FROM $wpdb->comments WHERE comment_approved='spam')";
+		$matches = $wpdb->get_col( $query );
+
+		foreach ( $matches as $ip ) {
+
+			$wpdb->query( "UPDATE $wpdb->comments SET comment_approved='spam' WHERE comment_approved='0' AND comment_author_IP='$ip'" );
+		}
+	}
+
+	/**
+	 * Spams unapproved comments with same author URL but different name and email.
+	 */
+	static function spam_pending_by_url_pattern() {
+
+		/** @var wpdb $wpdb */
+		global $wpdb;
+
+		$query   = "SELECT comment_author_url FROM $wpdb->comments WHERE comment_approved='0' AND comment_author_url <> '' AND comment_author_url <> 'http://' GROUP BY comment_author_url HAVING COUNT(comment_author_url) > 1";
+		$matches = $wpdb->get_col( $query );
+
+		foreach ( $matches as $url ) {
+
+			$query = "SELECT DISTINCT comment_author_url, comment_author, comment_author_email FROM $wpdb->comments WHERE comment_approved='0' AND comment_author_url = '$url'";
+			$count = $wpdb->get_col( $query );
+
+			if ( count( $count ) > 1 )
+				$wpdb->query( "UPDATE $wpdb->comments SET comment_approved='spam' WHERE comment_approved='0' AND comment_author_url='$url'" );
+		}
+	}
+
+	/**
+	 * Spams unapproved comments with same IP but different name and email.
+	 */
+	static function spam_pending_by_ip_pattern() {
+
+		/** @var wpdb $wpdb */
+		global $wpdb;
+
+		$query   = "SELECT comment_author_IP FROM $wpdb->comments WHERE comment_approved='0' GROUP BY comment_author_IP HAVING COUNT(comment_author_IP) > 1";
+		$matches = $wpdb->get_col( $query );
+
+		foreach ( $matches as $ip ) {
+
+			$query = "SELECT DISTINCT comment_author_IP, comment_author, comment_author_email FROM $wpdb->comments WHERE comment_approved='0' AND comment_author_IP = '$ip'";
+			$count = $wpdb->get_col( $query );
+
+			if ( count( $count ) > 1 )
+				$wpdb->query( "UPDATE $wpdb->comments SET comment_approved='spam' WHERE comment_approved='0' AND comment_author_IP='$ip'" );
+		}
+	}
+
+	/**
+	 * Queries database for URLs in spam, calculates top encountered domains.
+	 *
+	 * @param int $count number of domains to return (from the top)
+	 *
+	 * @return array top $count domains in spam comments
+	 */
+	function get_top_spam_hosts( $count ) {
+
+		/** @var wpdb $wpdb */
+		global $wpdb;
+		$hosts = array();
+
+		$query = "SELECT comment_author_url FROM $wpdb->comments WHERE comment_approved='spam' AND comment_author_url<>'' AND comment_author_url<>'http://';";
+		$urls  = $wpdb->get_col( $query );
+		$urls  = array_unique( $urls );
+
+		foreach ( $urls as $url ) {
+
+			$host = parse_url( strtolower( $url ), PHP_URL_HOST );
+			if ( false === $host )
+				break;
+			if ( $host )
+				$hosts[] = $host;
+		}
+
+		$hosts = array_count_values( $hosts );
+		arsort( $hosts );
+		$hosts = array_slice( $hosts, 0, $count );
+		$hosts = array_flip( $hosts );
+
+		return $hosts;
 	}
 }
