@@ -53,7 +53,7 @@ class Deny_Spam {
 	 * @param string $user_ip
 	 * @param string $user_agent
 	 */
-	function wp_blacklist_check( $author, $email, $url, $comment, $user_ip, $user_agent ) {
+	static function wp_blacklist_check( $author, $email, $url, $comment, $user_ip, $user_agent ) {
 
 		/** @var wpdb $wpdb */
 		global $wpdb;
