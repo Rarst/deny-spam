@@ -1,4 +1,4 @@
-=== R Deny Spam ===
+=== Deny Spam ===
 Contributors: Rarst 
 Tags: comments,spam
 Requires at least: 2.9.2

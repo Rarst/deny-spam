@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: R Deny Spam
+Plugin Name: Deny Spam
 Plugin URI: http://www.Rarst.net/
 Description: 
 Version: 0.3
