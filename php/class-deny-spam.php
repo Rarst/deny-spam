@@ -273,7 +273,7 @@ class Deny_Spam {
 	 *
 	 * @return array top $count domains in spam comments
 	 */
-	function get_top_spam_hosts( $count ) {
+	static function get_top_spam_hosts( $count ) {
 
 		/** @var wpdb $wpdb */
 		global $wpdb;
