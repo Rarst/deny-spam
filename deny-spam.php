@@ -24,13 +24,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-/* scbFramework dependency check */
-require_once dirname( __FILE__ ) . '/scb-check.php';
+require_once dirname( __FILE__ ) . '/scb/load.php';
+require_once dirname( __FILE__ ) . '/php/class-deny-spam.php';
 
-if ( ! scb_check( __FILE__ ) )
-	return;
-
-require dirname( __FILE__ ) . '/php/class-deny-spam.php';
-require dirname( __FILE__ ) . '/php/class-deny-spam-admin-page.php';
-
-Deny_Spam::on_load();
+scb_init( array( 'Deny_Spam', 'on_load' ) );

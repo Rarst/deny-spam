@@ -9,6 +9,8 @@ class Deny_Spam {
 
 	static function on_load() {
 
+		require_once dirname( __FILE__ ) . '/class-deny-spam-admin-page.php';
+
 		add_action( 'init', array( __CLASS__, 'init' ) );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
 	}
