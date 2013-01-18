@@ -28,6 +28,11 @@ class Deny_Spam {
 			'group_action'       => 'reject',
 		) );
 
+		new scbCron( self::$plugin_file, array(
+			'schedule' => 'hourly',
+			'callback' => array( __CLASS__, 'cron_callback' ),
+		) );
+
 		if( is_admin() )
 			scbAdminPage::register( 'Deny_Spam_Admin_Page', self::$plugin_file, self::$options );
 	}
@@ -35,14 +40,6 @@ class Deny_Spam {
 	static function init() {
 
 		add_action( 'wp_blacklist_check', array( __CLASS__, 'wp_blacklist_check' ), 10, 6 );
-
-		// TODO move on to scbFramework and on activation/deactivation
-//		if ( ! wp_next_scheduled( 'rds_cron' ) ) {
-//
-//			wp_schedule_event( time(), 'hourly', 'rds_cron' );
-//		}
-//
-//		add_action( 'rds_cron', 'rds_cron_functions' );
 	}
 
 	/**
@@ -158,7 +155,7 @@ class Deny_Spam {
 	/**
 	 * Async tasks to be scheduled with WP Cron API
 	 */
-	static function rds_cron_functions() {
+	static function cron_callback() {
 
 		self::delete_old_spam();
 		self::spam_pending_by_url_pattern();
