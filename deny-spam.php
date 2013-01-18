@@ -29,4 +29,4 @@ require_once dirname( __FILE__ ) . '/php/class-deny-spam.php';
 
 Deny_Spam::$plugin_file = __FILE__;
 
-scb_init( array( 'Deny_Spam', 'on_load' ) );
+scb_init( array( 'Deny_Spam', 'plugins_loaded' ) );

@@ -9,14 +9,11 @@ class Deny_Spam {
 
 	static $options;
 
-	static function on_load() {
+	static function plugins_loaded() {
 
 		require_once dirname( __FILE__ ) . '/class-deny-spam-admin-page.php';
 
 		add_action( 'init', array( __CLASS__, 'init' ) );
-	}
-
-	static function init() {
 
 		load_plugin_textdomain( 'r-deny-spam', '', basename( dirname( __FILE__ ) ) . '/lang' );
 
@@ -31,10 +28,13 @@ class Deny_Spam {
 			'group_action'       => 'reject',
 		) );
 
-		add_action( 'wp_blacklist_check', array( __CLASS__, 'wp_blacklist_check' ), 10, 6 );
-
 		if( is_admin() )
 			scbAdminPage::register( 'Deny_Spam_Admin_Page', self::$plugin_file, self::$options );
+	}
+
+	static function init() {
+
+		add_action( 'wp_blacklist_check', array( __CLASS__, 'wp_blacklist_check' ), 10, 6 );
 
 		// TODO move on to scbFramework and on activation/deactivation
 //		if ( ! wp_next_scheduled( 'rds_cron' ) ) {
