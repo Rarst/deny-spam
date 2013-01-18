@@ -9,6 +9,17 @@ class Deny_Spam {
 
 	static $options;
 
+	/**
+	 * @param string $plugin_file
+	 */
+	static function on_load( $plugin_file ) {
+
+		self::$plugin_file = $plugin_file;
+
+		require_once dirname( self::$plugin_file ) . '/scb/load.php';
+		scb_init( array( __CLASS__, 'plugins_loaded' ) );
+	}
+
 	static function plugins_loaded() {
 
 		require_once dirname( __FILE__ ) . '/class-deny-spam-admin-page.php';

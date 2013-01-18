@@ -24,9 +24,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-require_once dirname( __FILE__ ) . '/scb/load.php';
 require_once dirname( __FILE__ ) . '/php/class-deny-spam.php';
 
-Deny_Spam::$plugin_file = __FILE__;
-
-scb_init( array( 'Deny_Spam', 'plugins_loaded' ) );
+Deny_Spam::on_load( __FILE__ );
