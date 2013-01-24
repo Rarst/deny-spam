@@ -57,34 +57,27 @@ class Deny_Spam_Admin_Page extends scbAdminPage {
 		echo $this->form_wrap( $output );
 	}
 
-	function form_handler() {
+	/**
+	 * @param array $new_data
+	 *
+	 * @return array
+	 */
+	function validate( $new_data ) {
 
-		if ( empty( $_POST['action'] ) )
-			return false;
+		foreach ( $new_data as $key => $value ) {
 
-		check_admin_referer( $this->nonce );
-
-		$new_data = array();
-
-		foreach ( array_keys( $this->formdata ) as $key ) {
-
-			if ( isset( $_POST[$key] ) )
-				$new_data[$key] = @$_POST[$key];
-			elseif ( isset( $this->options->$key ) )
-				$new_data[$key] = $this->options->$key;
-			else
-				$new_data[$key] = '';
+			if( ! in_array( $value, array( 'spam', 'reject', true ) ) )
+				$new_data[$key] = (int) $value;
 		}
 
-		$new_data       = stripslashes_deep( $new_data );
-		$this->formdata = $this->validate( $new_data, $this->formdata );
-
-		if ( isset( $this->options ) )
-			$this->options->update( $this->formdata );
-
-		$this->admin_msg();
+		return $new_data;
 	}
 
+	/**
+	 * @param string $name
+	 *
+	 * @return array
+	 */
 	function _radio_match( $name ) {
 
 		return array(
@@ -96,6 +89,13 @@ class Deny_Spam_Admin_Page extends scbAdminPage {
 		);
 	}
 
+	/**
+	 * @param string $title
+	 * @param string $id
+	 * @param array  $rows
+	 *
+	 * @return string
+	 */
 	function _subsection( $title, $id, $rows ) {
 
 		return html( "div id='$id'",
