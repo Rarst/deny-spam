@@ -2,8 +2,6 @@
 
 /**
  * Configures settings page in administration area
- *
- * @uses scbAdminPage
  */
 class Deny_Spam_Admin_Page extends scbAdminPage {
 
@@ -20,7 +18,8 @@ class Deny_Spam_Admin_Page extends scbAdminPage {
 
 	function page_content() {
 
-		$output = '';
+		$output     = '';
+		$text_extra = array( 'size' => 1, 'maxlength' => 2, 'style' => 'text-align:center;' );
 
 		$output .= $this->_subsection( __( 'Links limit', $this->textdomain ), 'links', array(
 				array(
@@ -28,8 +27,7 @@ class Deny_Spam_Admin_Page extends scbAdminPage {
 					'desc'  => __( 'links in comment text', $this->textdomain ),
 					'type'  => 'text',
 					'name'  => 'links_limit',
-					'value' => $this->options->links_limit,
-					'extra' => 'style="width:25px;text-align:center;"',
+					'extra' => $text_extra,
 				),
 				$this->_radio_match( 'links_limit_action' ),
 			)
@@ -45,8 +43,7 @@ class Deny_Spam_Admin_Page extends scbAdminPage {
 							'desc'  => __( 'times in database', $this->textdomain ),
 							'type'  => 'text',
 							'name'  => 'known_ip_limit',
-							'value' => $this->options->known_ip_limit,
-							'extra' => 'style="width:25px;text-align:center;"',
+							'extra' => $text_extra,
 						),
 						$this->_radio_match( 'known_ip_action' ),
 					)
@@ -54,7 +51,7 @@ class Deny_Spam_Admin_Page extends scbAdminPage {
 
 				. $this->_subsection( __( 'Groups of spam comments', $this->textdomain ), 'groups', array( $this->_radio_match( 'group_action' ) ) );
 
-		echo $this->form_wrap( $output );
+		echo $this->form_wrap( $output, get_submit_button( null, 'primary' ) );
 	}
 
 	/**
