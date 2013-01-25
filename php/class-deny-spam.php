@@ -5,8 +5,10 @@
  */
 class Deny_Spam {
 
+	/** @var string path to main plugin's file */
 	static $plugin_file;
 
+	/** @var scbOptions */
 	static $options;
 
 	/**
@@ -15,18 +17,15 @@ class Deny_Spam {
 	static function on_load( $plugin_file ) {
 
 		self::$plugin_file = $plugin_file;
-
-		require_once dirname( self::$plugin_file ) . '/scb/load.php';
-		scb_init( array( __CLASS__, 'plugins_loaded' ) );
-	}
-
-	static function plugins_loaded() {
-
-		require_once dirname( __FILE__ ) . '/class-deny-spam-admin-page.php';
-
 		add_action( 'init', array( __CLASS__, 'init' ) );
 
-		load_plugin_textdomain( 'r-deny-spam', '', basename( dirname( __FILE__ ) ) . '/lang' );
+		require_once dirname( self::$plugin_file ) . '/scb/load.php';
+		scb_init( array( __CLASS__, 'scb_init' ) );
+	}
+
+	static function scb_init() {
+
+		require_once dirname( __FILE__ ) . '/class-deny-spam-admin-page.php';
 
 		self::$options = new scbOptions( 'deny-spam', self::$plugin_file, array(
 			'links_limit'        => 5,
@@ -49,6 +48,8 @@ class Deny_Spam {
 	}
 
 	static function init() {
+
+		load_plugin_textdomain( 'r-deny-spam', '', basename( dirname( __FILE__ ) ) . '/lang' );
 
 		add_action( 'wp_blacklist_check', array( __CLASS__, 'wp_blacklist_check' ), 10, 6 );
 	}
