@@ -80,9 +80,7 @@ class Deny_Spam {
 
 			if ( 'reject' == self::$options->links_limit_action ) {
 
-				wp_die( __( 'Comment has <strong>over ', 'r-deny-spam' )
-						. ( self::$options->links_limit )
-						. __( ' links</strong>. Please go <a href="javascript: history.go(-1)">back</a> and reduce number of those.', 'r-deny-spam' ) );
+				wp_die( sprintf( __( 'Comment has <strong>over %s links</strong>. Please reduce number of those.', 'r-deny-spam' ), self::$options->links_limit ) );
 			}
 			else {
 
@@ -98,7 +96,7 @@ class Deny_Spam {
 		if ( $wpdb->get_var( $dupe ) ) {
 
 			if ( 'reject' == self::$options->duplicate_action )
-				wp_die( __( 'Duplicate comment content. Please go <a href="javascript: history.go(-1)">back</a> and rephrase.', 'r-deny-spam' ) );
+				wp_die( __( 'Duplicate comment content. Please rephrase.', 'r-deny-spam' ) );
 			else
 				add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 
@@ -142,7 +140,7 @@ class Deny_Spam {
 			if ( 'reject' == self::$options->group_action ) {
 
 				$wpdb->query( "UPDATE $wpdb->comments SET comment_approved='trash' WHERE comment_content = '$comment'" );
-				wp_die( __( 'Duplicate comment content. Please go <a href="javascript: history.go(-1)">back</a> and rephrase.', 'r-deny-spam' ) );
+				wp_die( __( 'Duplicate comment content. Please rephrase.', 'r-deny-spam' ) );
 			}
 			else {
 
