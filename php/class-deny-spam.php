@@ -49,7 +49,7 @@ class Deny_Spam {
 
 	static function init() {
 
-		load_plugin_textdomain( 'r-deny-spam', '', basename( dirname( __FILE__ ) ) . '/lang' );
+		load_plugin_textdomain( 'deny-spam', '', dirname( plugin_basename( self::$plugin_file )  ). '/lang' );
 
 		add_action( 'wp_blacklist_check', array( __CLASS__, 'wp_blacklist_check' ), 10, 6 );
 	}
@@ -80,7 +80,7 @@ class Deny_Spam {
 
 			if ( 'reject' == self::$options->links_limit_action ) {
 
-				wp_die( sprintf( __( 'Comment has <strong>over %s links</strong>. Please reduce number of those.', 'r-deny-spam' ), self::$options->links_limit ) );
+				wp_die( sprintf( __( 'Comment has <strong>over %s links</strong>. Please reduce number of those.', 'deny-spam' ), self::$options->links_limit ) );
 			}
 			else {
 
@@ -96,7 +96,7 @@ class Deny_Spam {
 		if ( $wpdb->get_var( $dupe ) ) {
 
 			if ( 'reject' == self::$options->duplicate_action )
-				wp_die( __( 'Duplicate comment content. Please rephrase.', 'r-deny-spam' ) );
+				wp_die( __( 'Duplicate comment content. Please rephrase.', 'deny-spam' ) );
 			else
 				add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 
@@ -111,7 +111,7 @@ class Deny_Spam {
 			if ( $wpdb->get_var( $dupe ) || self::is_known_spam_domain( $url ) ) {
 
 				if ( 'reject' == self::$options->known_sites_action )
-					wp_die( __( 'Your URL or domain is in list of known spam-promoted sites. If you believe this to be an error please contact site admin.', 'r-deny-spam' ) );
+					wp_die( __( 'Your URL or domain is in list of known spam-promoted sites. If you believe this to be an error please contact site admin.', 'deny-spam' ) );
 				else
 					add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 
@@ -125,7 +125,7 @@ class Deny_Spam {
 		if ( $wpdb->get_var( $dupe ) > self::$options->known_ip_limit ) {
 
 			if ( 'reject' == self::$options->known_ip_action )
-				wp_die( __( 'Your IP is in list of known spam sources. If you believe this to be an error please contact site admin.', 'r-deny-spam' ) );
+				wp_die( __( 'Your IP is in list of known spam sources. If you believe this to be an error please contact site admin.', 'deny-spam' ) );
 			else
 				add_filter( 'pre_comment_approved', array( __CLASS__, 'pre_comment_approved_spam' ) );
 
@@ -140,7 +140,7 @@ class Deny_Spam {
 			if ( 'reject' == self::$options->group_action ) {
 
 				$wpdb->query( "UPDATE $wpdb->comments SET comment_approved='trash' WHERE comment_content = '$comment'" );
-				wp_die( __( 'Duplicate comment content. Please rephrase.', 'r-deny-spam' ) );
+				wp_die( __( 'Duplicate comment content. Please rephrase.', 'deny-spam' ) );
 			}
 			else {
 
