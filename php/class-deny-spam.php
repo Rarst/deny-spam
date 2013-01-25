@@ -202,18 +202,12 @@ class Deny_Spam {
 	 */
 	static function is_known_spam_domain( $url ) {
 
-		$host = parse_url( $url, PHP_URL_HOST );
+		$host = @parse_url( $url, PHP_URL_HOST );
 
-		if ( false === $host )
+		if ( empty( $host ) )
 			return false;
 
-		$host = strtolower( $host );
-
-		// TODO shame! fix!
-		if ( in_array( $host, self::$options->known_sites ) )
-			return true;
-		else
-			return false;
+		return in_array( strtolower( $host ), self::$options->known_sites );
 	}
 
 	/**
