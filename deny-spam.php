@@ -6,6 +6,8 @@ Description:
 Version: 0.3
 Author: Andrey "Rarst" Savchenko
 Author URI: http://www.Rarst.net
+Text Domain: deny-spam
+Domain Path: /lang
 License: GPL2
 
 Copyright 2010 Andrey "Rarst" Savchenko ( email : contact@rarst.net )
